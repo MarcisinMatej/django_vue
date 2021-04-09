@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
     'coins'
 ]
 
@@ -71,7 +72,11 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'emc_project.wsgi.application'
+# for ASGI we need to define routing.py
+ASGI_APPLICATION = 'emc_project.asgi.application'
 
+
+CELERY_BROKER_URL = 'redis://localhost:6379'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -83,6 +88,20 @@ DATABASES = {
     }
 }
 
+# Channels are required for async-channel communication
+# First in first out order data structure
+# channel is queue of task/messages that is client recieve from producers
+# for each message and each channel django will call assigned consumer
+# In our case, django will call for each channel specified consumer
+CHANNEL_LAYERS = {
+    'default':{
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            # we would need this if Redis was runnig somewhere else
+            'hosts': [('127.0.0.1', 6379)]
+        }
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

@@ -16,11 +16,64 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-6 mx-auto mt-5">
-                <!-- read key from the context -->
-                <h3> {{ text }}</h3>
+            <div class="col-8 mx-auto mt-5">
+                <h3 class="mb-5"> Cryptocurrencies</h3>
+
+{% verbatim %}
+<div id="app">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Rank</th>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+        </tr>
+        </thead>
+        <tbody>
+                <tr v-for="coin in coins" :key="coin.id">
+                    <td class="aligne-middle">{{ coin.rank }}</td>
+                    <td class="aligne-middle">
+                        <img :src="coin.image" alt="" class="px-2" width="50">
+                        {{ coin.name }}
+                        <small class="text-muted px-2"> {{ coin.symbol }}</small>
+                    </td>
+                    <td class="aligne-middle" :class="{'raise': coin.state === 'raise', 'fall': coin.state ==='fall'}" > {{ coin.price }}</td>
+                </tr>
+        </tbody>
+    </table>
+</div>
+{% endverbatim %}
+
+
             </div>
         </div>
     </div>
+
+<script>
+    const { createApp } = Vue;
+
+    const CryptCoinsApp = {
+        data(){
+                return {
+                    coins: null
+                }
+        },
+        created(){
+            const socket = new WebSocket(`ws://${window.location.host}/ws/coins/`)
+
+            let _this = this;
+
+            socket.onmessage = function(event){
+                _this.coins = JSON.parse(event.data);
+                console.log(_this.coins);
+            }
+
+        }
+    }
+
+    createApp(CryptCoinsApp).mount('#app')
+
+</script>
+
 </body>
 </html>
