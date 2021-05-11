@@ -5,7 +5,7 @@ from celery import Celery
 # tell the os where are the sttings and modules
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'emc_project.settings')
 
-app = Celery('emc_project')
+app = Celery('emc_project',broker='redis://redis:6379/0')
 # we use CELERY prefix for celery object in the settings
 app.config_from_object('django.conf:settings', namespace='CELERY')
 

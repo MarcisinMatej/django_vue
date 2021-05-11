@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  redis:
+    image: "redis:alpine"
+    restart: always
+    expose:
+      - '6379'
+    ports:
+      - '6379:6379'
+  web:
+    build: .
+    command: bash -c "python manage.py migrate --noinput && python manage.py runserver"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+  celery:
+    build: .
+    command: celery -A emc_project beat -l ERROR
+    depends_on:
+      - redis
+  celery-beat:
+    build: .
+    command: celery -A emc_project worker -l ERROR
+    depends_on:
+      - redis
+

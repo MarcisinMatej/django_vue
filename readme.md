@@ -36,6 +36,14 @@ manage.py colect static
 manage.py runserver
 ```
 
+#### Running app with docker
+To ease usage a no need to use 3 different terminal windows the app was dockerized.
+To start it you need to execute following command. Before running install docker, you can follow this page
+https://docs.docker.com/get-docker/ 
+
+```bash
+docker-compose up --build
+```
 
 ### Celery + Redis
 
@@ -54,4 +62,4 @@ For a broker we will use Redis.
 ### Consuming the messages
 Given our solution we use Asynchronuous type of communication and for that we will use Channels-redis package
 This part will be responsible for picking up the results and pushing them to the FE
-For that we needed to define ASGI configs, like routings, consumers etc... 
+For that we needed to define ASGI configs, like routings, consumers etc...
